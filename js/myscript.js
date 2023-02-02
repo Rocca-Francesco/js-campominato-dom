@@ -6,14 +6,12 @@
 
 // collego il mio bottone per iniziare il gioco
 const playBtn = document.getElementById("play");
-// prendo la mia griglia
-const gridEl = document.getElementById("grid");
-// creo una variabile per associare la quantità di celle alla difficoltà
-let boxesQuantity;
 
 playBtn.addEventListener(
     "click",
     function () {
+        // prendo la mia griglia
+        const gridEl = document.getElementById("grid");
         // resetto la mia griglia prima di aggiungere elementi, in caso di nuova partita o cambio difficoltà
         gridEl.innerHTML = ""
         gridEl.classList.remove('mediumMode');
@@ -25,6 +23,8 @@ playBtn.addEventListener(
 
         // in base al grado di difficoltà scelto, assegno il valore di celle da creare e la classe alla mia griglia
 
+        // creo una variabile per associare la quantità di celle alla difficoltà
+        let boxesQuantity;
 
         if (difficultBtn == "easy") {
             boxesQuantity = 100;
@@ -35,24 +35,36 @@ playBtn.addEventListener(
             boxesQuantity = 49;
             gridEl.classList.add('hardMode');
         };
-        // creo la griglia tramite la funzione
-        boxes(boxesQuantity);
+        // creo la griglia tramite la funzione prendo nota del mio array con tutte le box
+        const allBoxes = boxes(boxesQuantity);
+        console.log(allBoxes);
+        // creo le bombe tramite la funzione
         const bombsEl = bombs(boxesQuantity);
         console.log(bombsEl);
+
+        // azzero il punteggio
+        let point = 0;
+
+        // creo un ciclo che attivi la box o la bomba
+        for (let i = 0; i < allBoxes.length; i++) {
+            allBoxes[i].addEventListener(
+                "click",
+                function () {
+                    y = i + 1;
+                    if (!bombsEl.includes(y)) {
+                        point++;
+                        console.log(point);
+                        allBoxes[i].classList.add("active");
+                    } else {
+                        allBoxes[i].classList.add("active", "bomb");
+                    }
+                })
+        }
     }
 );
 
 
 
-// gridEl.addEventListener(
-//     "click",
-//     function () {
-//         // switch perdita
-//         let bombClick = false;
-
-
-//     }
-// );
 
 /*************************
  *                       *
@@ -83,6 +95,7 @@ function boxes(quantity) {
         // pusho il mio box nell'array
         arrayBoxes.push(boxEl);
     };
+    return arrayBoxes;
     // // in base al click aggiungo la classe active
     // arrayBoxes.addEventListener(
     //     "click",
