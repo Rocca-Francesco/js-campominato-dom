@@ -6,15 +6,14 @@
 
 // collego il mio bottone per iniziare il gioco
 const playBtn = document.getElementById("play");
-// dichiaro una variabile per verificare che il mio bottone sia stato cliccato solo una volta
-let change = 0;
+// prendo la mia griglia
+const gridEl = document.getElementById("grid");
+// creo una variabile per associare la quantità di celle alla difficoltà
+let boxesQuantity;
 
 playBtn.addEventListener(
     "click",
     function () {
-        // prendo la mia griglia per associarle la classe in base alla difficoltà
-        const gridEl = document.getElementById("grid");
-
         // resetto la mia griglia prima di aggiungere elementi, in caso di nuova partita o cambio difficoltà
         gridEl.innerHTML = ""
         gridEl.classList.remove('mediumMode');
@@ -26,8 +25,6 @@ playBtn.addEventListener(
 
         // in base al grado di difficoltà scelto, assegno il valore di celle da creare e la classe alla mia griglia
 
-        // creo una variabile per associare la quantità di celle alla difficoltà
-        let boxesQuantity;
 
         if (difficultBtn == "easy") {
             boxesQuantity = 100;
@@ -38,11 +35,24 @@ playBtn.addEventListener(
             boxesQuantity = 49;
             gridEl.classList.add('hardMode');
         };
-        // // creo la griglia tramite la funzione
-        gameGen(boxesQuantity);
-
+        // creo la griglia tramite la funzione
+        boxes(boxesQuantity);
+        const bombsEl = bombs(boxesQuantity);
+        console.log(bombsEl);
     }
-)
+);
+
+
+
+// gridEl.addEventListener(
+//     "click",
+//     function () {
+//         // switch perdita
+//         let bombClick = false;
+
+
+//     }
+// );
 
 /*************************
  *                       *
@@ -54,25 +64,51 @@ playBtn.addEventListener(
  *
  * Function to create a quantity of boxes based on difficulty and the bombs
  * @param {number} number that contains the quantity of boxes to create
- * @return create the quantity of boxes
+ * @return array with the list of boxes
  *
  */
 
-function gameGen(quantity) {
+function boxes(quantity) {
+    // creo un array con la lista dei miei box
+    const arrayBoxes = [];
+
     for (let i = 0; i < quantity; i++) {
-        // crea
+        // crea una box
         const boxEl = document.createElement("div");
         boxEl.classList.add("box");
         boxEl.innerHTML = i + 1;
         // seleziono la mia griglia
-        document.getElementById("grid").appendChild(boxEl);
+        document.getElementById("grid").append(boxEl);
 
-        boxEl.addEventListener(
-            "click",
-            function () {
-                boxEl.classList.add("active");
-                let point
-            }
-        );
+        // pusho il mio box nell'array
+        arrayBoxes.push(boxEl);
     };
+    // // in base al click aggiungo la classe active
+    // arrayBoxes.addEventListener(
+    //     "click",
+    //     function () {
+    //         arrayBoxes[this].classList.add("active");
+    //         point++;
+    //         console.log(point);
+    //     }
+    // );
+};
+
+/**
+ *
+ * Function to generate bombs
+ * @param {number} number that contains the quantity of boxes to create/ the difficult
+ * @return array with the list of bombs
+ * 
+ */
+
+function bombs(difficultQuantity) {
+    bombsList = [];
+    for (let i = 0; bombsList.length < 16; i++) {
+        numRandom = Math.floor((Math.random() * difficultQuantity) + 1);
+        if (!bombsList.includes(numRandom)) {
+            bombsList.push(numRandom)
+        };
+    };
+    return bombsList;
 };
