@@ -2,10 +2,13 @@
  *                       *
  *        ON LOAD        *
  *                       *
- *************************/
+*************************/
 
 // collego il mio bottone per iniziare il gioco
 const playBtn = document.getElementById("play");
+
+// creo una variabile per tenere conto del record
+let recordEl = 0;
 
 playBtn.addEventListener(
     "click",
@@ -35,17 +38,62 @@ playBtn.addEventListener(
             boxesQuantity = 49;
             gridEl.classList.add('hardMode');
         };
+
         // creo la griglia tramite la funzione e prendo nota del mio array con tutte le box
         const allBoxes = boxes(boxesQuantity);
-        console.log(allBoxes);
+
         // creo le bombe tramite la funzione
         const bombsEl = bombs(boxesQuantity);
-        console.log(bombsEl);
 
-        // se non ho perso controllo gli eventi della partita
-        const punteggioFinale = controllGame(allBoxes, bombsEl);
+        // azzero il punteggio
+        let point = 0;
 
-        console.log(punteggioFinale);
+        // per tenere conto delle caselle cliccate
+        const checkedBox = []
+
+        // creo uno switch per controllare se la mia partita è in corso
+        let matchRun = true;
+
+
+        for (let i = 0; i < allBoxes.length; i++) {
+            allBoxes[i].addEventListener(
+                "click",
+                function () {
+                    if (matchRun == true) {
+
+                        // per rendere il testo della box uguale a quello nella bomba
+                        y = i + 1;
+
+                        // controllo che non sia già stata cliccata
+                        if (!checkedBox.includes(i)) {
+
+                            // controllo se c'è la bomba
+                            if (!bombsEl.includes(y)) {
+                                point++;
+                                allBoxes[i].classList.add("active");
+                                checkedBox.push(i);
+                            } else {
+                                allBoxes[i].classList.add("active", "bomb");
+
+                                // spengo la partita e scrivo il punteggio
+                                matchRun = false;
+                                const loseLabel = document.getElementById("result");
+                                loseLabel.innerHTML = "Hai perso! Il tuo punteggio è: " + point;
+
+                                // cambio il record se necessario
+                                if (point > recordEl) {
+                                    recordEl = point;
+
+                                    // prendo il mio elemento record
+                                    const recordLabel = document.getElementById("record");
+                                    recordLabel.innerHTML = "Il tuo record è: " + recordEl;
+                                };
+                            };
+                        };
+                    };
+                }
+            );
+        };
     }
 );
 
@@ -102,45 +150,3 @@ function bombs(difficultQuantity) {
     };
     return bombsList;
 };
-
-/**
- *
- * Function to controll the game
- * @param {number} number that contains the quantity of boxes to check
- * @param {number} number that contains the numbers of bombs to check
- * 
-*/
-function controllGame(numBoxes, numBombs) {
-    // azzero il punteggio
-    let point = 0;
-    // per tenere conto delle caselle cliccate
-    const checkedBox = []
-    // creo uno switch per controllare se la mia partita è in corso
-    let matchRun = true;
-    for (let i = 0; i < numBoxes.length; i++) {
-        console.log(i);
-        numBoxes[i].addEventListener(
-            "click",
-            function () {
-                if (matchRun == true) {
-                    // per rendere il testo della box uguale a quello nella bomba
-                    y = i + 1;
-                    // controllo che non sia già stata cliccata
-                    if (!checkedBox.includes(i)) {
-                        console.log(checkedBox);
-                        // controllo se c'è la bomba
-                        if (!numBombs.includes(y)) {
-                            point++;
-                            console.log(point);
-                            numBoxes[i].classList.add("active");
-                            checkedBox.push(i);
-                        } else {
-                            numBoxes[i].classList.add("active", "bomb");
-                            matchRun = false;
-                        };
-                    };
-                };
-            }
-        );
-    };
-}
