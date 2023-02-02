@@ -73,7 +73,11 @@ playBtn.addEventListener(
                                 allBoxes[i].classList.add("active");
                                 checkedBox.push(i);
                             } else {
-                                allBoxes[i].classList.add("active", "bomb");
+                                for (let z = 0; z < bombsEl.length; z++) {
+                                    let showBomb = bombsEl[z];
+                                    showBomb = showBomb - 1;
+                                    allBoxes[showBomb].classList.add("active", "bomb");
+                                }
 
                                 // spengo la partita e scrivo il punteggio
                                 matchRun = false;
